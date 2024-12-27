@@ -1,30 +1,31 @@
 #include <bits/stdc++.h>
 using namespace std;
+typedef long long ll;
+
+int n, k;
+vector<ll> a;
+
+bool check(ll m) {
+	ll cnt = 0;
+	for (int i = n/2;i < n;++i)
+		if (m > a[i]) {
+			cnt += (m - a[i]);
+			if (cnt > k) return false;
+		} else break;
+	return cnt <= k;
+}
 
 void solve() {
-	int n, k; cin >> n >> k;
-	vector<int> a(n,0);
-	for (int& i : a) cin >> i;
+	cin >> n >> k; a.assign(n,0);
+	for (ll& i : a) cin >> i;
 	sort(a.begin(),a.end());
-	int curr = a[n/2], cnt = 1;
-	// cout << curr << '\n';
-	for (int i = n/2 + 1;i <= n;++i) {
-		if (i == n) {
-			if (k < cnt) break;
-			while (k >= cnt) {
-				++curr; k -= cnt;
-			}
-		}
-		if (a[i] == curr) ++cnt;
-		else {
-			if (k < cnt) break;
-			while (k >= cnt && curr != a[i]) {
-				++curr; k -= cnt;
-			}
-			++cnt;
-		}
+	ll l = a[n/2], r = 2e9 + 1;
+	while (r >= l) {
+		ll m = (r + l) >> 1;
+		if (check(m)) l = m + 1;
+		else r = m - 1;
 	}
-	cout << curr << '\n';
+	cout << l - 1 << '\n';
 }
 
 int main() {
